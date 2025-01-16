@@ -9,14 +9,13 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-
-      - name: Create Release # Nový krok pro vytvoření release
+      - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # Use the new secret here
         with:
-          tag_name: ${{ github.sha }} # Můžete použít jiný tag
+          tag_name: ${{ github.sha }}
           release_name: Release ${{ github.sha }}
           body: Automated release for commit ${{ github.sha }}
           draft: false
