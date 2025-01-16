@@ -22,15 +22,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create Zip Archive
-
-      run: zip -r "$REPO_NAME.zip" .
-        env:
+        run: zip -r "$REPO_NAME.zip" .
+        env:  # Opraveno odsazení
           # Název assetu na release
           asset_name: ${{ env.REPO_NAME }}.zip
           REPO_NAME: ${{ github.event.repository.name }}
 
       - name: Upload Release Asset
-      id: upload-release-asset
+        id: upload-release-asset # Opraveno odsazení
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
