@@ -17,8 +17,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.sha }} # Můžete použít jiný tag
-          release_name:
-          Release ${{ github.sha }}
+          release_name: Release ${{ github.sha }}
           body: Automated release for commit ${{ github.sha }}
           draft: false
           prerelease: false
