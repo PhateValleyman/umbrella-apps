@@ -1,6 +1,7 @@
 name: build-and-release
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "master" ]
 
@@ -9,14 +10,15 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # Use the new secret here
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # Use your RELEASE_TOKEN secret
         with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
+          tag_name: v${{ github.run_number }} # Use the run number
+          release_name: Release v${{ github.run_number }}
           body: Automated release for commit ${{ github.sha }}
           draft: false
           prerelease: false
@@ -36,3 +38,4 @@ jobs:
           asset_path: ${{ env.REPO_NAME }}.zip
           asset_name: ${{ env.REPO_NAME }}.zip
           asset_content_type: application/zip
+
