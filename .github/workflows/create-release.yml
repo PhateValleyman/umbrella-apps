@@ -1,0 +1,40 @@
+name: build-and-release
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Release # Nový krok pro vytvoření release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.sha }} # Můžete použít jiný tag
+          release_name:
+          Release ${{ github.sha }}
+          body: Automated release for commit ${{ github.sha }}
+          draft: false
+          prerelease: false
+
+      - name: Create Zip Archive
+        run: zip -r "$REPO_NAME.zip" .
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # Použijeme upload_url z kroku create_release
+          asset_path: ${{ env.REPO_NAME }}.zip
+          asset_name: ${{ env.REPO_NAME }}.zip
+          asset_content_type: application/zip
