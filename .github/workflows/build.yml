@@ -25,12 +25,21 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+       # Zip all files in the repository
+      - name: Create Zip Archive
+      run: zip -r "$REPO_NAME.zip" .
+        env:
+          # Název assetu na release
+          asset_name: ${{ env.REPO_NAME }}.zip
+          REPO_NAME: ${{ github.event.repository.name }}
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      - name: Upload Release Asset
+      id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }} # URL pro upload assetu
+          asset_path: ${{ env.REPO_NAME }}.zip  # Cesta k zip souboru
+          asset_name: ${{ env.REPO_NAME }}.zip  # Název assetu na release
+          asset_content_type: application/zip
